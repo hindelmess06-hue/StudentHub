@@ -1,128 +1,127 @@
-# Student Hub (UEMF)
 
-A Flutter app that puts university announcements, events, clubs and campus
-information in one place. Dark, glassy, animated UI with four switchable accent
-colours.
+## Student Hub (UEMF)
 
-## What's inside
+Application mobile Flutter qui centralise les annonces, événements, clubs et informations pratiques du campus de l'Université Euromed de Fès (UEMF).
 
-| Area | What it does |
+> **Projet réalisé par :** Hind El Messsaouri - Marwa Reffouh - Firdawss El Hayouni - Hamza Smlali - Mohamed Wassim Boukhari
+> **Filière / Niveau :** Développement Android 
+> **Encadrant :** Clement Regis Tuyishime
+> **Année universitaire :** [2026-2027]
+
+---
+
+## 1. Présentation
+
+Les étudiants reçoivent aujourd'hui l'information du campus par de nombreux canaux dispersés. Student Hub propose un point d'accès unique, réservé aux membres de l'université : seules les adresses `@ueuromed.org` sont acceptées, et l'accès n'est ouvert qu'après vérification de l'adresse e-mail.
+
+## 2. Fonctionnalités
+
+| Module | Description |
 | --- | --- |
-| **Sign-up / Sign-in** | Only `@ueuromed.org` (and subdomains) accepted. Live email validation, typo suggestions ("Did you mean @ueuromed.org?"), password strength meter. |
-| **Email verification** | Nobody enters the app until the email is verified. A non-existent address never receives the message, so it can never be verified. |
-| **Home** | Greeting, pinned announcement, stats, latest news carousel, upcoming events, clubs to discover, global search. |
-| **News** | Categories, search, unread dots, save/bookmark, detail page. Publishers can post. |
-| **Events** | 14-day date strip with event dots, category filter, "I'm going" agenda, detail page. |
-| **Clubs** | Category filter, follow/unfollow, club page with updates timeline, upcoming events, contact. |
-| **Campus** | Services with live "Open / Closed" status, hours, locations, useful contacts. |
-| **Profile** | Verified badge, counters, accent colour picker, sign out. |
+| **Inscription / Connexion** | Domaine `@ueuromed.org` (et sous-domaines) uniquement. Validation en direct, suggestion de correction de faute de frappe, indicateur de robustesse du mot de passe. |
+| **Vérification d'e-mail** | Aucun accès à l'application tant que l'adresse n'est pas vérifiée. |
+| **Accueil** | Annonce épinglée, statistiques, dernières actualités, événements à venir, clubs à découvrir, recherche globale. |
+| **Actualités** | Catégories, recherche, indicateur de non-lu, favoris, page de détail. Les publicateurs peuvent publier. |
+| **Événements** | Bandeau de 14 jours, filtre par catégorie, agenda « J'y vais », page de détail. |
+| **Clubs** | Filtre par catégorie, suivre / ne plus suivre, page du club avec fil d'actualité et contact. |
+| **Campus** | Services avec statut Ouvert / Fermé en direct, horaires, lieux, contacts utiles. |
+| **Profil** | Badge « vérifié », compteurs, choix de la couleur d'accentuation, déconnexion. |
 
-## 1. Run it (Demo mode, 5 minutes)
+## 3. Technologies
 
-Demo mode needs no backend. Accounts live on the phone and the verification
-"email" is a 6-digit code shown on screen. **No real email is sent in this mode.**
+- **Flutter / Dart** : application mobile (Android)
+- **Firebase Authentication** : comptes et vérification d'e-mail
+- **google_fonts** : polices Space Grotesk et Inter
+- Deux modes d'exécution : **Démo** (sans serveur) et **Firebase** (réel)
+
+## 4. Prérequis
+
+- Flutter SDK (version stable) : https://docs.flutter.dev/get-started/install
+- Android Studio avec un émulateur (ex. Pixel 7) ou un téléphone Android en débogage USB
+- Pour le mode Firebase : un compte Google et un projet Firebase
+
+> **Windows :** le projet, le SDK Flutter (`C:\src\flutter`) et le cache des paquets (`PUB_CACHE=C:\pub_cache`) doivent se trouver dans des chemins **sans espace**, et le **mode développeur** de Windows doit être activé.
+
+## 5. Installation et lancement
+
+### Mode Démo (aucun serveur requis)
+
+Les comptes sont stockés sur l'appareil et le code de vérification à 6 chiffres s'affiche à l'écran. **Aucun e-mail réel n'est envoyé dans ce mode.**
 
 ```bash
-# 1. Install Flutter: https://docs.flutter.dev/get-started/install
-# 2. In this folder, generate the Android project files:
-flutter create . --platforms=android --org ma.ueuromed --project-name student_hub
-# 3. Get packages and run on an emulator or a USB-connected phone:
 flutter pub get
 flutter run
 ```
 
-Tip: sign up as `admin@ueuromed.org` in Demo mode to see the **Publisher**
-features (the "+" button on the News tab).
+Astuce : s'inscrire avec `admin@ueuromed.org` donne accès aux fonctions de publication (bouton « + » dans l'onglet Actualités).
 
-## 2. Real email verification (Firebase)
+### Mode Firebase (vérification d'e-mail réelle)
 
-This is what makes "the email must exist" real. Firebase sends a verification
-link to the address; the app stays locked until it is opened.
-
-1. Create a project at https://console.firebase.google.com
-2. **Authentication → Sign-in method → Email/Password → Enable**
-3. In this folder:
+1. Créer un projet sur https://console.firebase.google.com
+2. **Authentication → Méthode de connexion → E-mail/Mot de passe → Activer**
+3. Configurer le projet :
    ```bash
    dart pub global activate flutterfire_cli
    firebase login
-   flutterfire configure        # choose your project, platform: Android
+   flutterfire configure
    ```
-   This overwrites `lib/firebase_options.dart` with your real settings.
-4. Open `android/app/build.gradle(.kts)` and make sure `minSdk` is at least **23**.
-5. Run with Firebase switched on:
+   Cette commande remplace `lib/firebase_options.dart` par les paramètres réels.
+4. Vérifier que `minSdk` vaut au moins **23** dans `android/app/build.gradle(.kts)`.
+5. Lancer :
    ```bash
    flutter run --dart-define=USE_FIREBASE=true
    ```
 
-Optional: customise the verification email text in Firebase console →
-Authentication → Templates.
+### Générer l'APK
 
-## 3. Hardening (do this before a real launch)
-
-The domain check inside the app gives instant feedback but **can be bypassed**
-by someone talking to Firebase directly. The real guarantees are:
-
-- **Verified email required.** The app already blocks unverified accounts.
-- **Server-side rules.** Whatever data you store (Firestore, Storage), require:
-  `request.auth.token.email_verified == true &&
-  request.auth.token.email.matches('.*@ueuromed[.]org')`
-- **Block other domains at creation.** Firebase Auth *blocking functions*
-  (`beforeCreate`, needs Identity Platform) can reject any non-UEMF email.
-- **Publisher rights.** `AppConfig.publisherEmails` is a prototype shortcut.
-  In production, use Firebase custom claims set by an admin.
-
-## 4. Build the APK
-
-Make sure `android/app/src/main/AndroidManifest.xml` contains
-`<uses-permission android:name="android.permission.INTERNET"/>` (release
-builds need it for Firebase and fonts), then:
+Vérifier que `android/app/src/main/AndroidManifest.xml` contient la permission `android.permission.INTERNET`, puis :
 
 ```bash
 flutter build apk --release --dart-define=USE_FIREBASE=true
-# result: build/app/outputs/flutter-apk/app-release.apk
 ```
 
-## Important notes
+Le fichier se trouve dans `build/app/outputs/flutter-apk/app-release.apk`.
 
-- **Sample content.** Announcements, events, clubs, opening hours and contact
-  emails in `lib/data/seed_data.dart` are placeholders. Replace them with the
-  university's real data.
-- **Data is local.** Follows, "going", bookmarks and posts published from the
-  app are stored on the device. To share content between students and let
-  admins publish for everyone, move the content to a shared backend
-  (Cloud Firestore is the natural next step; `AppState` is the only file that
-  would need to change).
-- **Fonts** (Space Grotesk, Inter) load through `google_fonts` on first use.
-  To work fully offline, bundle them as assets.
-- **Not verified on a device by the author.** This project was written without a
-  Flutter toolchain available, so it has not been compiled or run. Expect to
-  fix a few small compile errors on first build (run `flutter analyze` and
-  `flutter test`).
-
-## Project layout
+## 6. Architecture
 
 ```
 lib/
-  main.dart                 app entry, routes by auth status
-  app_config.dart           domains, publishers, Demo/Firebase switch
-  firebase_options.dart     placeholder, overwritten by flutterfire configure
-  theme/app_theme.dart      colours, fonts, accent palettes
-  models/models.dart        Announcement, CampusEvent, Club, CampusService...
-  data/seed_data.dart       sample content
-  services/
-    email_rules.dart        UEMF-only validation + typo suggestions
-    auth_service.dart       Firebase + Demo implementations
-  state/app_state.dart      session, follows, going, saved, publishing
-  widgets/                  shared UI (aurora background, cards, nav bar...)
-  screens/                  auth, verify, home, news, events, clubs, campus, profile, search
-test/widget_test.dart       unit tests for the email rules
+├── main.dart                 Point d'entrée, routage selon l'état de connexion
+├── app_config.dart           Domaines autorisés, publicateurs, mode Démo / Firebase
+├── firebase_options.dart     Configuration Firebase (générée par flutterfire)
+├── theme/app_theme.dart      Couleurs, polices, palettes d'accentuation
+├── models/models.dart        Annonce, Événement, Club, Service du campus
+├── data/seed_data.dart       Contenu d'exemple
+├── services/
+│   ├── email_rules.dart      Validation UEMF et suggestions de correction
+│   └── auth_service.dart     Implémentations Firebase et Démo
+├── state/app_state.dart      Session, abonnements, agenda, favoris, publication
+├── widgets/                  Composants d'interface partagés
+└── screens/                  Écrans (auth, vérification, accueil, actualités,
+                              événements, clubs, campus, profil, recherche)
+test/widget_test.dart         Tests unitaires des règles d'e-mail
 ```
 
-## Ideas for next steps
+## 7. Sécurité
 
-Push notifications for followed clubs, add-to-calendar, a real campus map,
-Arabic / French / English localisation, club admin dashboards, event QR
-check-in, and a Firestore backend.
-=======
-# StudentHub
->>>>>>> 0ddad2e3ef1102ba4994084c2a3507de4f86aa56
+La vérification du domaine dans l'application donne un retour immédiat, mais **elle peut être contournée** par quelqu'un qui contacte Firebase directement. Les garanties réelles sont :
+
+- **E-mail vérifié obligatoire** : l'application bloque les comptes non vérifiés.
+- **Règles côté serveur** : pour toute donnée stockée (Firestore, Storage), exiger
+  `request.auth.token.email_verified == true && request.auth.token.email.matches('.*@ueuromed[.]org')`.
+- **Blocage à la création** : les *blocking functions* de Firebase Auth (`beforeCreate`, Identity Platform) peuvent refuser tout e-mail hors UEMF.
+- **Droits de publication** : `AppConfig.publisherEmails` est un raccourci de prototype. En production, utiliser des *custom claims* attribués par un administrateur.
+
+## 8. Limites connues
+
+- **Contenu d'exemple** : annonces, événements, clubs, horaires et contacts de `lib/data/seed_data.dart` sont fictifs et doivent être remplacés par les données réelles de l'université.
+- **Données locales** : abonnements, « J'y vais », favoris et publications sont enregistrés sur l'appareil. Pour partager le contenu entre étudiants, il faut un backend partagé (Cloud Firestore est la suite naturelle ; seul `AppState` serait à adapter).
+- **Polices** : chargées via `google_fonts` à la première utilisation ; à embarquer en ressources pour un usage totalement hors ligne.
+
+## 9. Évolutions prévues
+
+Notifications push pour les clubs suivis, ajout au calendrier, carte interactive du campus, localisation arabe / français / anglais, tableaux de bord pour les responsables de club, enregistrement d'entrée par QR code, backend Firestore.
+
+## 10. Licence et contact
+
+Projet académique, UEMF. 
