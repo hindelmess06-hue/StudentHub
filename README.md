@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Student Hub (UEMF)
 
 A Flutter app that puts university announcements, events, clubs and campus
