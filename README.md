@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Student Hub (UEMF)
 
 A Flutter app that puts university announcements, events, clubs and campus
@@ -123,3 +124,6 @@ test/widget_test.dart       unit tests for the email rules
 Push notifications for followed clubs, add-to-calendar, a real campus map,
 Arabic / French / English localisation, club admin dashboards, event QR
 check-in, and a Firestore backend.
+=======
+# StudentHub
+>>>>>>> 0ddad2e3ef1102ba4994084c2a3507de4f86aa56
